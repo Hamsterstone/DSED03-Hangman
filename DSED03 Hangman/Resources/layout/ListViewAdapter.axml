@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="94.5dp"
+        android:id="@+id/linearLayout1">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="66.0dp"
+            android:id="@+id/linearLayout2">
+            <RelativeLayout
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:id="@+id/relativeLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="Name"
+                    android:id="@+id/lblName"
+                    android:layout_width="178.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:textSize="30dip"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dip" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:id="@+id/relativeLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0.0dp">
+                <TextView
+                    android:text="Hardest Word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblHardWordLabel"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" />
+                <TextView
+                    android:text="HardestWord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblHardestWord"
+                    android:layout_weight="25"
+                    android:height="30dip"
+                    android:textSize="22dip"
+                    android:paddingRight="5dip"
+                    android:layout_alignParentRight="false"
+                    android:layout_below="@id/lblHardWordLabel"
+                    android:layout_alignLeft="@id/lblHardWordLabel" />
+                <TextView
+                    android:text="Date"
+                    android:id="@+id/lblHardestWordDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:layout_below="@id/lblHardestWord"
+                    android:textSize="15dip"
+                    android:paddingRight="5dip" />
+                <TextView
+                    android:text="Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblHardestWordScore"
+                    android:layout_below="@id/lblHardestWord"
+                    android:layout_alignLeft="@id/lblHardestWord" />
+            </RelativeLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="25.5dp"
+            android:id="@+id/relativeLayout1">
+            <TextView
+                android:text="Score"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lblBestScore"
+                android:layout_marginRight="14.5dp"
+                android:paddingLeft="5dip" />
+            <TextView
+                android:text="Date"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lblBestScoreDate"
+                android:layout_toRightOf="@id/lblBestScore" />
+            <TextView
+                android:text="BestStreak"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lblBestStreak"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:layout_alignParentRight="true" />
+            <TextView
+                android:text="CurrentStreak"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lblCurrentStreak"
+                android:paddingRight="5dip"
+                android:layout_toLeftOf="@id/lblBestStreak" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

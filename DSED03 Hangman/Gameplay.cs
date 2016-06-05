@@ -6,6 +6,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
@@ -15,10 +16,10 @@ using Android.Widget;
 
 namespace DSED03_Hangman
 {
-    [Activity(Label = "Gameplay")]
+    [Activity(Label = "Gameplay", ScreenOrientation = ScreenOrientation.Portrait)]
     public class Gameplay : Activity
     {
-        private static string logTag = "aaaaaLogTag";
+       
         
         public TextView TxtDisplay;
         public ImageView ImgHangman;
@@ -39,9 +40,9 @@ namespace DSED03_Hangman
             CreateDisplayCharArray();
             DisplayCharArrayOnScreen();
             SetWordScore();
-           GameInfo.Attempt = 1;
+            GameInfo.Attempt = 1;
             ImgHangman.SetImageResource(GameInfo.ImageLookup[GameInfo.Attempt]);
-           // ImgHangman.Background=Resources.GetDrawable(Resource.Drawable)       ImageLookup[Attempt]
+          
         }
         private void InitializeButtons()
         {
@@ -101,7 +102,7 @@ namespace DSED03_Hangman
 
         public int LetterScoreValue(char letter)
         {
-            Log.Debug(logTag, "LetterScoreValue");
+            Log.Debug(GameInfo.logTag, "LetterScoreValue");
             switch (letter)
             {
                 case 'A':case 'E': case 'I': case 'O': case 'U': case 'L': case 'N': case 'S': case 'T': case 'R':
@@ -124,16 +125,17 @@ namespace DSED03_Hangman
                   
                 case 'Q': case 'Z':
                     return 10;
-                   
+                case '-':
+                    return 0;
 
             }
-            Log.Debug(logTag, "Something went wrong in LetterScoreValue, should never get here");
+            Log.Debug(GameInfo.logTag, "Something went wrong in LetterScoreValue, should never get here");
             return 0;
         }
 
         public void OnButtonClick(object sender, EventArgs e)
         {
-            Log.Debug(logTag, "OnButtonClick");
+            Log.Debug(GameInfo.logTag, "OnButtonClick");
             Button fakeButton = sender as Button;
             fakeButton.Enabled = false;
             CheckLetter(Convert.ToChar(fakeButton.Text.ToUpper()));
@@ -142,7 +144,7 @@ namespace DSED03_Hangman
             TestForEndGame();
         }
         private void TestForEndGame() {
-            Log.Debug(logTag, "TestForEndGame");
+            Log.Debug(GameInfo.logTag, "TestForEndGame");
             if (IsTooManyGuesses())
             {
                 GameInfo.WordGuessed = false;
@@ -161,7 +163,7 @@ namespace DSED03_Hangman
         public void GenerateWordList()
         {
             
-            Log.Debug(logTag, "GenerateWordList");
+            Log.Debug(GameInfo.logTag, "GenerateWordList");
             if (GameInfo.WordList.Count == 0)
             {
                 int counter = 0;
@@ -176,8 +178,20 @@ namespace DSED03_Hangman
 
 
                             counter++;
-                            GameInfo.WordList.Add(dictionaryLine);
-                            Log.Debug(logTag, "WordDone " + counter);
+                            if (GetWordScore(dictionaryLine) <= GameInfo.EasyWordScoreCap && GameInfo.Easy)
+                            {
+                                GameInfo.WordList.Add(dictionaryLine);
+                            }else if (GetWordScore(dictionaryLine) > GameInfo.EasyWordScoreCap && GetWordScore(dictionaryLine) <= GameInfo.MediumWordScoreCap && GameInfo.Medium)
+                            {
+                                GameInfo.WordList.Add(dictionaryLine);
+                            }else if (GetWordScore(dictionaryLine) > GameInfo.MediumWordScoreCap && GameInfo.Hard)
+                            {
+                                GameInfo.WordList.Add(dictionaryLine);
+                            }
+
+
+
+                            Log.Debug(GameInfo.logTag, "WordDone " + counter);
 
                         }
                     }
@@ -191,14 +205,14 @@ namespace DSED03_Hangman
 
         private void PickRandomWord()
         {
-            Log.Debug(logTag, "PickRandomWord");
+            Log.Debug(GameInfo.logTag, "PickRandomWord");
             GameInfo.GameWord = GameInfo.WordList[RandomNumberGenerator(GameInfo.WordList.Count)];
 
            
         }
         private int RandomNumberGenerator(int maxNumber)
         {
-            Log.Debug(logTag, "RandomNumberGenerator");
+            Log.Debug(GameInfo.logTag, "RandomNumberGenerator");
             int rndNum;
             Random rndCompChoice = new Random(Guid.NewGuid().GetHashCode());
             rndNum = rndCompChoice.Next(1, maxNumber);
@@ -207,20 +221,20 @@ namespace DSED03_Hangman
 
         private char[] CreateWordCharArray(string word)
         {
-            Log.Debug(logTag, "CreateWordCharArray");
+            Log.Debug(GameInfo.logTag, "CreateWordCharArray");
             return word.ToCharArray();
         }
 
         private void SetGameWordCharArray()
         {
-            Log.Debug(logTag, "SetGameWordCharArray");
+            Log.Debug(GameInfo.logTag, "SetGameWordCharArray");
             GameInfo.GameWordCharArray = GameInfo.GameWord.ToCharArray();
-               // CreateWordCharArray(gameWord);
+               
         }
 
         private void CreateDisplayCharArray()
         {
-            Log.Debug(logTag, "CreateDisplayCharArray");
+            Log.Debug(GameInfo.logTag, "CreateDisplayCharArray");
             GameInfo.DisplayCharArray = GameInfo.GameWord.ToCharArray();
             for (int i = 0; i < GameInfo.DisplayCharArray.Length; i++)
             {
@@ -230,9 +244,10 @@ namespace DSED03_Hangman
                 }
             }
         }
+       
 
         private void DisplayCharArrayOnScreen()
-        {Log.Debug(logTag, "DisplayCharArrayOnScreen");
+        {Log.Debug(GameInfo.logTag, "DisplayCharArrayOnScreen");
              GameInfo.DisplayString="";
             foreach (char letter in GameInfo.DisplayCharArray)
             {
@@ -252,7 +267,7 @@ namespace DSED03_Hangman
         }
         private bool IsLetterInWord(char testLetter)
         {
-            Log.Debug(logTag, "CheckLetter");
+            Log.Debug(GameInfo.logTag, "CheckLetter");
             int counter = 0;
             foreach (char wordLetter in GameInfo.GameWordCharArray)
             {
@@ -312,6 +327,16 @@ namespace DSED03_Hangman
             GameInfo.WordGuessed = true;
             StartActivity(typeof(EndGame));
             //todo new screen (with safe man?) play again y/n. add WordScore() to TotalScore
+        }
+
+        public int GetWordScore(string word)
+        {
+            int wordScore=0;
+            foreach (char letter in word)
+            {
+                wordScore += LetterScoreValue(letter);
+            }
+            return wordScore;
         }
         public void SetWordScore()
         {

@@ -83,19 +83,11 @@
             android:layout_height="25.5dp"
             android:id="@+id/relativeLayout1">
             <TextView
-                android:text="Score"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/lblBestScore"
-                android:layout_marginRight="14.5dp"
-                android:paddingLeft="5dip" />
-            <TextView
                 android:text="Date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/lblBestScoreDate"
-                android:layout_toRightOf="@id/lblBestScore" />
+                android:id="@+id/lblLastPlayed"
+                android:layout_alignParentLeft="true" />
             <TextView
                 android:text="BestStreak"
                 android:textAppearance="?android:attr/textAppearanceSmall"

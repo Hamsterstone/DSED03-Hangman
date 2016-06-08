@@ -19,16 +19,12 @@ namespace DSED03_Hangman
     [Activity(Label = "Gameplay", ScreenOrientation = ScreenOrientation.Portrait)]
     public class Gameplay : Activity
     {
-       
-        
         public TextView TxtDisplay;
         public ImageView ImgHangman;
-      
-        
-
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+           
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.GameScreen);
             InitializeButtons();
@@ -315,19 +311,7 @@ namespace DSED03_Hangman
             }
             return true;
         }
-        private void EndGameFail()
-        {
-            GameInfo.WordGuessed = false;
-            StartActivity(typeof(EndGame));
-            //TODO new screen with hung man, play again y/n buttons. no goes to start screen, Yes to new instance.
-        }
-
-        private void EndGameSuccess()
-        {
-            GameInfo.WordGuessed = true;
-            StartActivity(typeof(EndGame));
-            //todo new screen (with safe man?) play again y/n. add WordScore() to TotalScore
-        }
+       
 
         public int GetWordScore(string word)
         {

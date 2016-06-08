@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/btnDbDelete"
-            android:backgroundTint="#ff0000" />
+            android:background="#ff0000" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -45,49 +45,52 @@ namespace DSED03_Hangman
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int HangmanMine01 = 2130837504;
+			public const int HangmanIcon = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int HangmanMine02 = 2130837505;
+			public const int HangmanMine01 = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int HangmanMine03 = 2130837506;
+			public const int HangmanMine02 = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int HangmanMine04 = 2130837507;
+			public const int HangmanMine03 = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int HangmanMine05 = 2130837508;
+			public const int HangmanMine04 = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int HangmanMine06 = 2130837509;
+			public const int HangmanMine05 = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int HangmanMine07 = 2130837510;
+			public const int HangmanMine06 = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int HangmanMine08 = 2130837511;
+			public const int HangmanMine07 = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int HangmanMine09 = 2130837512;
+			public const int HangmanMine08 = 2130837512;
 			
 			// aapt resource value: 0x7f020009
-			public const int HangmanMine10 = 2130837513;
+			public const int HangmanMine09 = 2130837513;
 			
 			// aapt resource value: 0x7f02000a
-			public const int HangmanMine11 = 2130837514;
+			public const int HangmanMine10 = 2130837514;
 			
 			// aapt resource value: 0x7f02000b
-			public const int HangmanMine12 = 2130837515;
+			public const int HangmanMine11 = 2130837515;
 			
 			// aapt resource value: 0x7f02000c
-			public const int HangmanMine13 = 2130837516;
+			public const int HangmanMine12 = 2130837516;
 			
 			// aapt resource value: 0x7f02000d
-			public const int HangmanMine14 = 2130837517;
+			public const int HangmanMine13 = 2130837517;
 			
 			// aapt resource value: 0x7f02000e
-			public const int Icon = 2130837518;
+			public const int HangmanMine14 = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public const int Icon = 2130837519;
 			
 			static Drawable()
 			{
@@ -105,8 +108,8 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f050024
 			public const int btnA = 2131034148;
 			
-			// aapt resource value: 0x7f050041
-			public const int btnAddPlayer = 2131034177;
+			// aapt resource value: 0x7f050040
+			public const int btnAddPlayer = 2131034176;
 			
 			// aapt resource value: 0x7f050031
 			public const int btnB = 2131034161;
@@ -165,8 +168,8 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f050023
 			public const int btnP = 2131034147;
 			
-			// aapt resource value: 0x7f050043
-			public const int btnPlay = 2131034179;
+			// aapt resource value: 0x7f050042
+			public const int btnPlay = 2131034178;
 			
 			// aapt resource value: 0x7f05001a
 			public const int btnQ = 2131034138;
@@ -198,14 +201,14 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f05002d
 			public const int btnZ = 2131034157;
 			
-			// aapt resource value: 0x7f050044
-			public const int cbxEasy = 2131034180;
-			
-			// aapt resource value: 0x7f050046
-			public const int cbxHard = 2131034182;
+			// aapt resource value: 0x7f050043
+			public const int cbxEasy = 2131034179;
 			
 			// aapt resource value: 0x7f050045
-			public const int cbxMedium = 2131034181;
+			public const int cbxHard = 2131034181;
+			
+			// aapt resource value: 0x7f050044
+			public const int cbxMedium = 2131034180;
 			
 			// aapt resource value: 0x7f050013
 			public const int imgEndGame = 2131034131;
@@ -213,17 +216,11 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f050018
 			public const int imgHangman = 2131034136;
 			
-			// aapt resource value: 0x7f05003c
-			public const int lblBestScore = 2131034172;
-			
 			// aapt resource value: 0x7f05003d
-			public const int lblBestScoreDate = 2131034173;
+			public const int lblBestStreak = 2131034173;
 			
 			// aapt resource value: 0x7f05003e
-			public const int lblBestStreak = 2131034174;
-			
-			// aapt resource value: 0x7f05003f
-			public const int lblCurrentStreak = 2131034175;
+			public const int lblCurrentStreak = 2131034174;
 			
 			// aapt resource value: 0x7f05000a
 			public const int lblDbBestScore = 2131034122;
@@ -270,6 +267,9 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f05003a
 			public const int lblHardestWordScore = 2131034170;
 			
+			// aapt resource value: 0x7f05003c
+			public const int lblLastPlayed = 2131034172;
+			
 			// aapt resource value: 0x7f050035
 			public const int lblName = 2131034165;
 			
@@ -285,8 +285,8 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f05000e
 			public const int linearLayout4 = 2131034126;
 			
-			// aapt resource value: 0x7f050042
-			public const int listView1 = 2131034178;
+			// aapt resource value: 0x7f050041
+			public const int listView1 = 2131034177;
 			
 			// aapt resource value: 0x7f050012
 			public const int listViewDb1 = 2131034130;
@@ -312,8 +312,8 @@ namespace DSED03_Hangman
 			// aapt resource value: 0x7f050014
 			public const int txtEndGameWord = 2131034132;
 			
-			// aapt resource value: 0x7f050040
-			public const int txtName = 2131034176;
+			// aapt resource value: 0x7f05003f
+			public const int txtName = 2131034175;
 			
 			static Id()
 			{

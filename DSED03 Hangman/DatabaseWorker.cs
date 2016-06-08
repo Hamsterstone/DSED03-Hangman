@@ -13,10 +13,10 @@ using Android.Widget;
 
 namespace DSED03_Hangman
 {
-    [Activity(Label = "DatabaseWorker")]
+    [Activity(Label = "DatabaseWorker", WindowSoftInputMode = SoftInput.StateHidden)]
     public class DatabaseWorker : Activity
     {
-        public List<Player> playerList;
+        public List<Player> dbPlayerList;
         private DatabaseManager myDbManager;
         private TextView lblDbName;
         private TextView lblDbLastPlayedDate;
@@ -59,19 +59,27 @@ namespace DSED03_Hangman
             // Log.Debug(GameInfo.logTag, "playerList");
 
             UpdatePlayerList();
-            PlayerDataAdapter myDataAdapter = new PlayerDataAdapter(this, playerList);
-            listViewDb1.Adapter = myDataAdapter;
+           // PlayerDataAdapter myDataAdapter = new PlayerDataAdapter(this, dbPlayerList);
+            //listViewDb1.Adapter = myDataAdapter;
         }
-
+        public void HideKeyboard()
+        {
+            //txtDbName.ClearFocus();
+            InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
+            var currentFocus = CurrentFocus;
+            inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
+        }
         void UpdatePlayerList()
         {
-            playerList = myDbManager.ViewAll();
+            dbPlayerList = myDbManager.ViewAll();
+            PlayerDataAdapter myDataAdapter = new PlayerDataAdapter(this, dbPlayerList);
+            listViewDb1.Adapter = myDataAdapter;
         }
 
         private void ListViewDb1_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             var listView = sender as ListView;
-            Player myPlayer = playerList[e.Position];
+            Player myPlayer = dbPlayerList[e.Position];
             GameInfo.CurrentPlayer = myPlayer;
             txtDbName.Text = myPlayer.PlayerName;
             lblDbLastPlayedDate.Text = "Last Played: " + myPlayer.LastPlayedDate.ToShortDateString();
@@ -82,12 +90,13 @@ namespace DSED03_Hangman
             lblDbBestScore.Text = myPlayer.BestScore.ToString();
             lblDbBestStreak.Text = "Best Streak: " + myPlayer.BestStreak.ToString();
             lblDbCurrentStreak.Text = "Current Streak: " + myPlayer.CurrentStreak.ToString();
-            
-            txtDbName.ClearFocus();
+            HideKeyboard();
 
-            InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
-            var currentFocus = CurrentFocus;
-            inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
+            //txtDbName.ClearFocus();
+
+            //InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
+            //var currentFocus = CurrentFocus;
+            //inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
         }
 
         private void BtnDbDelete_Click(object sender, EventArgs e)
@@ -113,7 +122,7 @@ namespace DSED03_Hangman
         {
             GameInfo.CurrentPlayer.PlayerName = txtDbName.Text;
             myDbManager.db.Update(GameInfo.CurrentPlayer);
-        UpdatePlayerList();
+            UpdatePlayerList();
         }
     }
 }

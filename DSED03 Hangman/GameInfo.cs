@@ -13,6 +13,7 @@ using SQLite;
 
 namespace DSED03_Hangman
 {
+    //Static class used to pass information between the different activities
     static class GameInfo
     {
         public static string logTag = "aaaaaLogTag";

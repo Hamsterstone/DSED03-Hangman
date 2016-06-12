@@ -13,9 +13,10 @@ using Android.Widget;
 
 namespace DSED03_Hangman
 {
-    [Activity(Label = "DatabaseWorker", WindowSoftInputMode = SoftInput.StateHidden)]
+    [Activity(Label = "Player Management", WindowSoftInputMode = SoftInput.StateHidden)]
     public class DatabaseWorker : Activity
     {
+
         public List<Player> dbPlayerList;
         private DatabaseManager myDbManager;
         private TextView lblDbName;
@@ -71,50 +72,79 @@ namespace DSED03_Hangman
         }
         void UpdatePlayerList()
         {
-            dbPlayerList = myDbManager.ViewAll();
+            dbPlayerList = myDbManager.ViewAllSortByName();
             PlayerDataAdapter myDataAdapter = new PlayerDataAdapter(this, dbPlayerList);
             listViewDb1.Adapter = myDataAdapter;
         }
 
         private void ListViewDb1_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
+            Log.Debug(GameInfo.logTag, "ListItemClick");
             var listView = sender as ListView;
-            Player myPlayer = dbPlayerList[e.Position];
-            GameInfo.CurrentPlayer = myPlayer;
-            txtDbName.Text = myPlayer.PlayerName;
-            lblDbLastPlayedDate.Text = "Last Played: " + myPlayer.LastPlayedDate.ToShortDateString();
-            lblDbHardestWord.Text = myPlayer.HardestWord;
-            lblDbHardestWordDate.Text = myPlayer.HardestWordDate.ToShortDateString();
-            lblDbHardestWordScore.Text = "Score: " + myPlayer.HardestWordScore.ToString();
-            lblDbBestScoreDate.Text = "Date: " + myPlayer.BestScoreDate.ToShortDateString();
-            lblDbBestScore.Text = myPlayer.BestScore.ToString();
-            lblDbBestStreak.Text = "Best Streak: " + myPlayer.BestStreak.ToString();
-            lblDbCurrentStreak.Text = "Current Streak: " + myPlayer.CurrentStreak.ToString();
+            GameInfo.CurrentPlayer = dbPlayerList[e.Position];
+            UpdateDisplayFields();
             HideKeyboard();
+            Log.Debug(GameInfo.logTag, "CurrentPlayer Changed to " + GameInfo.CurrentPlayer.PlayerName);
 
-            //txtDbName.ClearFocus();
+        }
 
-            //InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
-            //var currentFocus = CurrentFocus;
-            //inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
+        private void UpdateDisplayFields() {
+            if (GameInfo.CurrentPlayer != null)
+            {
+                txtDbName.Text = GameInfo.CurrentPlayer.PlayerName;
+                lblDbLastPlayedDate.Text = "Last Played: " + GameInfo.CurrentPlayer.LastPlayedDate.ToShortDateString();
+                lblDbHardestWord.Text = GameInfo.CurrentPlayer.HardestWord;
+                lblDbHardestWordDate.Text = GameInfo.CurrentPlayer.HardestWordDate.ToShortDateString();
+                lblDbHardestWordScore.Text = "Score: " + GameInfo.CurrentPlayer.HardestWordScore.ToString();
+                lblDbBestScoreDate.Text = "Date: " + GameInfo.CurrentPlayer.BestScoreDate.ToShortDateString();
+                lblDbBestScore.Text = GameInfo.CurrentPlayer.BestScore.ToString();
+                lblDbBestStreak.Text = "Best Streak: " + GameInfo.CurrentPlayer.BestStreak.ToString();
+                lblDbCurrentStreak.Text = "Current Streak: " + GameInfo.CurrentPlayer.CurrentStreak.ToString();
+            }
+            else
+            {
+                txtDbName.Text = "";
+                lblDbLastPlayedDate.Text = "Last Played: ";
+                lblDbHardestWord.Text = "";
+                lblDbHardestWordDate.Text = "";
+                lblDbHardestWordScore.Text = "Score: " ;
+                lblDbBestScoreDate.Text = "Date: " ;
+                lblDbBestScore.Text = "";
+                lblDbBestStreak.Text = "Best Streak: ";
+                lblDbCurrentStreak.Text = "Current Streak: " ;
+            }
+            
         }
 
         private void BtnDbDelete_Click(object sender, EventArgs e)
         {
-            var builder = new AlertDialog.Builder(this);
-            builder.SetMessage("Delete Player?");
-            builder.SetPositiveButton("OK", (s, ev) =>
+            //Creates a popup OK/Cancel dialog to confirm player delete
+            //NOTE: AlertDialog is async, place all needed calls inside button events or they will run too early.
+            if (GameInfo.CurrentPlayer != null)
             {
-                /* do something on OK click */
-                myDbManager.db.Delete<Player>(GameInfo.CurrentPlayer.PlayerId);
-            });
-            builder.SetNegativeButton("Cancel", (s, ev) =>
+                var builder = new AlertDialog.Builder(this);
+                string deletePlayerString = "Delete " + GameInfo.CurrentPlayer.PlayerName + "?";
+                builder.SetMessage(deletePlayerString);
+                builder.SetPositiveButton("OK", (s, ev) =>
+                {
+                    /* do something on OK click */
+                    myDbManager.db.Delete<Player>(GameInfo.CurrentPlayer.PlayerId);
+                    //Reset the current player to null to avoid trying to delete a Player twice
+                    GameInfo.CurrentPlayer = null;
+                    UpdatePlayerList();
+                    UpdateDisplayFields();
+                });
+                builder.SetNegativeButton("Cancel", (s, ev) =>
+                {
+                    /* do something on Cancel click */
+                });
+                builder.Create().Show();
+               
+            }
+            else
             {
-                /* do something on Cancel click */
-            });
-            builder.Create().Show();
-
-           UpdatePlayerList();
+                Toast.MakeText(this, "No Player Selected", ToastLength.Long).Show();
+            }
 
         }
 

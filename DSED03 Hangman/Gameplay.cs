@@ -95,7 +95,7 @@ namespace DSED03_Hangman
             btnY.Click += OnButtonClick;
             btnZ.Click += OnButtonClick;
         }
-
+        // Method returns scrabble value of input letter
         public int LetterScoreValue(char letter)
         {
             Log.Debug(GameInfo.logTag, "LetterScoreValue");
@@ -132,9 +132,13 @@ namespace DSED03_Hangman
         public void OnButtonClick(object sender, EventArgs e)
         {
             Log.Debug(GameInfo.logTag, "OnButtonClick");
+            //Set up a fake button
             Button fakeButton = sender as Button;
+            //Turn off the button
             fakeButton.Enabled = false;
+            //Check if letter pressed is in word
             CheckLetter(Convert.ToChar(fakeButton.Text.ToUpper()));
+            //Update the onscreen display
             DisplayCharArrayOnScreen();
             ImgHangman.SetImageResource(GameInfo.ImageLookup[GameInfo.Attempt]);
             TestForEndGame();
@@ -162,7 +166,7 @@ namespace DSED03_Hangman
             Log.Debug(GameInfo.logTag, "GenerateWordList");
             if (GameInfo.WordList.Count == 0)
             {
-                int counter = 0;
+                int counter = 0; //For debug 
                 try
                 {
                     var assets = Assets;
@@ -170,10 +174,10 @@ namespace DSED03_Hangman
                     {
                         while (!streamReader.EndOfStream)
                         {
+
                             string dictionaryLine = streamReader.ReadLine();
-
-
                             counter++;
+                            //Test wordscore of current word vs diffuculties chosen
                             if (GetWordScore(dictionaryLine) <= GameInfo.EasyWordScoreCap && GameInfo.Easy)
                             {
                                 GameInfo.WordList.Add(dictionaryLine);
@@ -184,11 +188,7 @@ namespace DSED03_Hangman
                             {
                                 GameInfo.WordList.Add(dictionaryLine);
                             }
-
-
-
                             Log.Debug(GameInfo.logTag, "WordDone " + counter);
-
                         }
                     }
                 }
@@ -215,12 +215,6 @@ namespace DSED03_Hangman
             return rndNum;
         }
 
-        private char[] CreateWordCharArray(string word)
-        {
-            Log.Debug(GameInfo.logTag, "CreateWordCharArray");
-            return word.ToCharArray();
-        }
-
         private void SetGameWordCharArray()
         {
             Log.Debug(GameInfo.logTag, "SetGameWordCharArray");
@@ -232,6 +226,7 @@ namespace DSED03_Hangman
         {
             Log.Debug(GameInfo.logTag, "CreateDisplayCharArray");
             GameInfo.DisplayCharArray = GameInfo.GameWord.ToCharArray();
+            // Sets all letters that aren't a hyphen to be an underscore
             for (int i = 0; i < GameInfo.DisplayCharArray.Length; i++)
             {
                 if (GameInfo.DisplayCharArray[i] != '-')
@@ -245,6 +240,7 @@ namespace DSED03_Hangman
         private void DisplayCharArrayOnScreen()
         {Log.Debug(GameInfo.logTag, "DisplayCharArrayOnScreen");
              GameInfo.DisplayString="";
+            //cycles through the DisplayCharArray and biulds a string with a space between each letter
             foreach (char letter in GameInfo.DisplayCharArray)
             {
                 GameInfo.DisplayString += letter+" ";
@@ -252,19 +248,19 @@ namespace DSED03_Hangman
             
             TxtDisplay.Text = GameInfo.DisplayString;
         }
-
+        //Checks if sent letter is in the gameword
         private void CheckLetter(char testLetter)
         {
             if (IsLetterInWord(testLetter))
             {
-                ChangeDisplay(testLetter);
+                ChangeDisplayCharArray(testLetter);
             }
             else GameInfo.Attempt++;
         }
         private bool IsLetterInWord(char testLetter)
         {
-            Log.Debug(GameInfo.logTag, "CheckLetter");
-            int counter = 0;
+            Log.Debug(GameInfo.logTag, "IsWordInLetter");
+           
             foreach (char wordLetter in GameInfo.GameWordCharArray)
             {
                 if (testLetter == wordLetter)
@@ -272,12 +268,12 @@ namespace DSED03_Hangman
                     return true;
 
                 }
-                counter++;
+                
             }
             return false;
         }
 
-        private void ChangeDisplay(char letter)
+        private void ChangeDisplayCharArray(char letter)
         {
             int counter = 0;
             foreach (char wordLetter in GameInfo.GameWordCharArray)
@@ -292,13 +288,14 @@ namespace DSED03_Hangman
 
         private bool IsTooManyGuesses()
         {
-            if (GameInfo.Attempt == 14)
+            if (GameInfo.Attempt >= 14)
             {
                 return true;
             }
             return false;
         }
 
+        //If there is an underscore still in the word, returns false, else returns true
         private bool HasGuessedWord() 
         {
             foreach (char letter in GameInfo.DisplayCharArray)
@@ -312,7 +309,7 @@ namespace DSED03_Hangman
             return true;
         }
        
-
+        // Returns scrabble wordscore of input word
         public int GetWordScore(string word)
         {
             int wordScore=0;
@@ -322,6 +319,7 @@ namespace DSED03_Hangman
             }
             return wordScore;
         }
+
         public void SetWordScore()
         {
             GameInfo.WordScore=0;

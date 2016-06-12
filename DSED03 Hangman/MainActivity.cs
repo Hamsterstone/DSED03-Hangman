@@ -15,7 +15,7 @@ using Javax.Security.Auth;
 
 namespace DSED03_Hangman
 {
-    [Activity(Label = "DSED03_Hangman", MainLauncher = true, Icon = "@drawable/icon",ScreenOrientation = ScreenOrientation.Portrait, WindowSoftInputMode = SoftInput.StateHidden)]
+    [Activity(Label = "Hangman", MainLauncher = true, Icon = "@drawable/HangmanIcon",ScreenOrientation = ScreenOrientation.Portrait, WindowSoftInputMode = SoftInput.StateHidden)]
     public class MainActivity : Activity
     {
        
@@ -43,11 +43,7 @@ namespace DSED03_Hangman
             cbxMedium = FindViewById<CheckBox>(Resource.Id.cbxMedium);
             cbxHard = FindViewById<CheckBox>(Resource.Id.cbxHard);
             playersListView = FindViewById<ListView>(Resource.Id.listView1);
-            cbxEasy.CheckedChange += CbxCheckChanged;
-            cbxMedium.CheckedChange += CbxCheckChanged;
-            cbxHard.CheckedChange += CbxCheckChanged;
             btnAddPlayer.LongClick += BtnAddPlayer_LongClick;
-
             playersListView.ItemClick += OnListItemClick;
             Log.Debug(GameInfo.logTag, "myDbManager");
             myDbManager=new DatabaseManager();
@@ -60,10 +56,9 @@ namespace DSED03_Hangman
 
             PlayerDataAdapter myDataAdapter=new PlayerDataAdapter(this,playerList);
             playersListView.Adapter=myDataAdapter;
-           // HideKeyboard();
-
+           
             txtName.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => {
-                // filter on text changed
+                // filter Playerlist on text changed
                 Log.Debug(GameInfo.logTag, "TextChanged");
                 var searchTerm = txtName.Text;
                  updatedTableItems = playerList.Where(player=>player.PlayerName.ToLower().Contains(searchTerm.ToLower())
@@ -80,30 +75,20 @@ namespace DSED03_Hangman
         {
             base.OnResume();
             UpdatePlayerList();
-
             txtName.Text = "";
-            //HideKeyboard();
-           //txtName.Text = GameInfo.CurrentPlayer.PlayerName;
-            //InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
-            //var currentFocus = CurrentFocus;
-            //inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
+            
         }
 
         public void HideKeyboard()
         {
-            //txtName.ClearFocus();
             InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
             var currentFocus = CurrentFocus;
             inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
         }
-        private void CbxCheckChanged(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            GameInfo.WordList.Clear();
-        }
-
+        
         void UpdatePlayerList()
         {
-            playerList = myDbManager.ViewAll();
+            playerList = myDbManager.ViewAllSortByName();
             PlayerDataAdapter myDataAdapter = new PlayerDataAdapter(this, playerList);
             playersListView.Adapter = myDataAdapter;
         }
@@ -114,14 +99,15 @@ namespace DSED03_Hangman
 
         private void BtnAddPlayer_Click(object sender, EventArgs e)
         {
+            //Check there is a name to add
             if (txtName.Text != "")
             {
                 string playerName = txtName.Text;
+                //Add the name
                 myDbManager.AddPlayer(playerName);
-                //GameInfo.CurrentPlayer=
+                //Update the displayed players
                 UpdatePlayerList();
                 txtName.Text = "";
-                //txtName.Text = GameInfo.CurrentPlayer.PlayerName;
             }
             else
             {
@@ -132,13 +118,10 @@ namespace DSED03_Hangman
         public void OnListItemClick(object sender, Android.Widget.AdapterView.ItemClickEventArgs e)
         {
             var listView = sender as ListView;
+            //set CurrentPlayer to the selected player
             GameInfo.CurrentPlayer = updatedTableItems[e.Position];
             txtName.Text = GameInfo.CurrentPlayer.PlayerName;
             HideKeyboard();
-            //txtName.ClearFocus();
-            //InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
-            //var currentFocus = CurrentFocus;
-            //inputManager.HideSoftInputFromWindow(currentFocus.WindowToken, HideSoftInputFlags.None);
         }
 
 
@@ -146,9 +129,7 @@ namespace DSED03_Hangman
         private void BtnPlay_Click(object sender, EventArgs e)
         {
 
-            GameInfo.Easy = cbxEasy.Checked;
-            GameInfo.Medium = cbxMedium.Checked;
-            GameInfo.Hard = cbxHard.Checked;
+            
             if (cbxEasy.Checked == false && cbxMedium.Checked == false && cbxHard.Checked == false)
             {
                 Toast.MakeText(this, "Select Difficulty", ToastLength.Long).Show();
@@ -158,6 +139,15 @@ namespace DSED03_Hangman
             }
             else
             {
+                //Clears Wordlist on difficulty change so it will be rebuilt.
+                if (GameInfo.Easy != cbxEasy.Checked || GameInfo.Medium != cbxMedium.Checked ||
+                    GameInfo.Hard != cbxHard.Checked)
+                {
+                    GameInfo.Easy = cbxEasy.Checked;
+                    GameInfo.Medium = cbxMedium.Checked;
+                    GameInfo.Hard = cbxHard.Checked;
+                    GameInfo.WordList.Clear();
+                }
                 StartActivity(typeof (Gameplay));
             }
         }
@@ -165,13 +155,14 @@ namespace DSED03_Hangman
 
     }
 
+    //Listview adapter for player data
     public class PlayerDataAdapter : BaseAdapter<Player>
     {
         private readonly Activity context;
         private readonly List<Player> items; 
         public PlayerDataAdapter(Activity context, List<Player> items)
         {
-            Log.Debug(GameInfo.logTag, "PlayerDataAdapter");
+            Log.Debug(GameInfo.logTag, "PlayerDataAdapter Constructor");
             this.context = context;
             this.items = items;
         }
@@ -179,7 +170,7 @@ namespace DSED03_Hangman
         {
             get
             {
-                Log.Debug(GameInfo.logTag, "position");
+                Log.Debug(GameInfo.logTag, "PlayerDataAdapter Position Override");
                 return items[position] ;
             }
         }
@@ -188,14 +179,14 @@ namespace DSED03_Hangman
         {
             get
             {
-                Log.Debug(GameInfo.logTag, "Count");
+                Log.Debug(GameInfo.logTag, "PlayerDataAdapter Count Override");
                 return items.Count;
             }
         }
 
         public override long GetItemId(int position)
         {
-            Log.Debug(GameInfo.logTag, "GetItemId");
+            Log.Debug(GameInfo.logTag, "PlayerDataAdapter GetItemId Override");
             return position;
         }
 
@@ -210,13 +201,12 @@ namespace DSED03_Hangman
               view=  context.LayoutInflater.Inflate(Resource.Layout.ListViewAdapter, null);
             }
                 view.FindViewById<TextView>(Resource.Id.lblName).Text= item.PlayerName;
-               
                 view.FindViewById<TextView>(Resource.Id.lblLastPlayed).Text = "LastPlayed: "+item.LastPlayedDate.ToShortDateString();
                 view.FindViewById<TextView>(Resource.Id.lblHardestWord).Text = item.HardestWord;
-                view.FindViewById<TextView>(Resource.Id.lblHardestWordScore).Text = "Score: " + item.HardestWordScore.ToString();
+                view.FindViewById<TextView>(Resource.Id.lblHardestWordScore).Text = "Score: " + item.HardestWordScore;
                 view.FindViewById<TextView>(Resource.Id.lblHardestWordDate).Text = item.HardestWordDate.ToShortDateString();
-                view.FindViewById<TextView>(Resource.Id.lblBestStreak).Text = "Best: " + item.BestStreak.ToString();
-                view.FindViewById<TextView>(Resource.Id.lblCurrentStreak).Text = "Streak: Current: " + item.CurrentStreak.ToString();
+                view.FindViewById<TextView>(Resource.Id.lblBestStreak).Text = "Best: " + item.BestStreak;
+                view.FindViewById<TextView>(Resource.Id.lblCurrentStreak).Text = "Streak: Current: " + item.CurrentStreak;
 
             
             return view;

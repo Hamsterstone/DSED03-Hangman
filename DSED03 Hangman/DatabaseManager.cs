@@ -16,6 +16,7 @@ using Environment = Android.OS.Environment;
 
 namespace DSED03_Hangman
 {
+   // Class to build database objects
     public class Player
     {
         [PrimaryKey, AutoIncrement]
@@ -31,24 +32,31 @@ namespace DSED03_Hangman
         public int CurrentStreak { get; set; }
         public Player() { }
     }
+
     class DatabaseManager
     {
         public SQLiteConnection db { get; set; }
 
+        //Constructor for database manager
         public DatabaseManager()
         {
+            //Set up the database filename and path
             string databaseFileName = "PlayerDatabase.sqlite";
             string databasePath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), databaseFileName);
+            //Create a new database connection
             db = new SQLiteConnection(databasePath);
+            //Fill the database
             db.CreateTable<Player>();
-
+            // TODO remove for deploy.
+            // Populates player database for testing if database is empty
             if (db.Table<Player>().Count() == 0)
             {
                 PopulateDatabase();
             }
         }
 
-        public List<Player> ViewAll()
+        // Method to return a list of players sorted by name
+        public List<Player> ViewAllSortByName()
         {
             try
             {
@@ -59,19 +67,19 @@ namespace DSED03_Hangman
                 return null;
             }
         }
-
+        //Method for adding a new player to the database
         internal void AddPlayer(string playerName)
         {
+            //create a temporary Player object
             Player newPlayer = new Player();
+            //Set the Player object's PlayerName property
             newPlayer.PlayerName = playerName;
-            
+            //Insert the temporary Player into the database
             db.Insert(newPlayer);
         }
        
-        void UpdatePlayerData()
-        {
-            
-        }
+        // Method holding information for test database population.
+        //TODO Remove for deploy.
         private void PopulateDatabase()
         {
             Player newPlayer = new Player();

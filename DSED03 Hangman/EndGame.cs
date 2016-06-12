@@ -29,7 +29,6 @@ namespace DSED03_Hangman
             
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EndScreen);
-            // Create your application here
             TxtEndGameStatus = FindViewById<TextView>(Resource.Id.txtEndGameStatus);
             TxtEndGameWord = FindViewById<TextView>(Resource.Id.txtEndGameWord);
             ImgEndGame = FindViewById<ImageView>(Resource.Id.imgEndGame);
@@ -39,6 +38,7 @@ namespace DSED03_Hangman
             btnPlayAgain.Click += BtnPlayAgainClick;
             btnQuit.Click += BtnQuitClick;
             myDbManager = new DatabaseManager();
+            // Did the activity enter on a won or lost game
             switch (GameInfo.WordGuessed)
             {
                 case true:
@@ -67,9 +67,7 @@ namespace DSED03_Hangman
             SetDisplayString(false);
             TxtEndGameStatus.Text = "Sorry, you lost.";
             UpdatePlayerOnLoss();
-
-
-            // DisplayCharArrayOnScreen();
+            
         }
 
         private void GameWon()
@@ -77,17 +75,17 @@ namespace DSED03_Hangman
             SetDisplayString(true);
             TxtEndGameStatus.Text = "You Won. Word score: " + GameInfo.WordScore;
             UpdatePlayerOnWin();
-            //DisplayCharArrayOnScreen();
+            
         }
 
         public void UpdatePlayerOnWin()
         {
             //  update lastplayeddate
             GameInfo.CurrentPlayer.LastPlayedDate=DateTime.Today;
-//add to currentstreak
+            //add to wordscore to currentstreak
             GameInfo.CurrentPlayer.CurrentStreak += GameInfo.WordScore;
 
-            //update beststreak+
+            //update beststreak if currentstreak is bigger
             if (GameInfo.CurrentPlayer.BestStreak < GameInfo.CurrentPlayer.CurrentStreak)
             {
                 GameInfo.CurrentPlayer.BestStreak = GameInfo.CurrentPlayer.CurrentStreak;
@@ -99,9 +97,9 @@ namespace DSED03_Hangman
                 GameInfo.CurrentPlayer.HardestWord = GameInfo.GameWord;
                 GameInfo.CurrentPlayer.HardestWordDate=DateTime.Today;
             }
-            //update best streak if necessary
+            
 
-
+            //save the updated info to the database
             myDbManager.db.Update(GameInfo.CurrentPlayer);
         }
 
@@ -110,91 +108,43 @@ namespace DSED03_Hangman
             //update lastplayeddate
             GameInfo.CurrentPlayer.LastPlayedDate = DateTime.Today;
             //close beststreak
-            //close currentstreak
+            
             if (GameInfo.CurrentPlayer.BestStreak < GameInfo.CurrentPlayer.CurrentStreak)
             {
                 GameInfo.CurrentPlayer.BestStreak = GameInfo.CurrentPlayer.CurrentStreak;
             }
+            //close currentstreak
             GameInfo.CurrentPlayer.CurrentStreak = 0;
+            //save the updated info to the database
             myDbManager.db.Update(GameInfo.CurrentPlayer);
         }
 
-        public bool IsWordWorthMore()
-        {
-            if (GameInfo.WordScore > GameInfo.CurrentPlayer.HardestWordScore)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /*
-          
-         any
-         update lastplayeddate
-
-
-            win
-
-
-
-
-            lost
-
-
-
-
-             public int PlayerId { get; set; }
-        public string PlayerName { get; set; }
-        public DateTime LastPlayedDate { get; set; }
-        public int BestStreak { get; set; }
-        public int BestScore { get; set; }
-        public DateTime BestScoreDate { get; set; }
-        public string HardestWord { get; set; }
-        public int HardestWordScore { get; set; }
-        public DateTime HardestWordDate { get; set; }
-        public int CurrentStreak { get; set; }
-             
-             */
-
-
-
-
-
-        private void DisplayCharArrayOnScreen()
-        {
-           // Log.Debug(logTag, "DisplayCharArrayOnScreen");
-            GameInfo.DisplayString = "";
-            foreach (char letter in GameInfo.DisplayCharArray)
-            {
-                GameInfo.DisplayString += letter + " ";
-            }
-
-            TxtEndGameWord.Text = GameInfo.DisplayString;
-        }
+       
         private void SetDisplayString(bool wonStatus)
         {
             GameInfo.DisplayString="";
-            
+            //Sets up HTML font encoding inserts
             string FontRed = "<font color='#ff3333'>";
             string FontGreen = "<font color='#00cc00'>";
             string EndFont = "</font>";
 
             int counter = 0;
-           switch (wonStatus)
+            switch (wonStatus)
             {
                 case false:
-                foreach (char letter in GameInfo.DisplayCharArray)
-                {
-                    if (letter == '_')
+                    foreach (char letter in GameInfo.DisplayCharArray)
                     {
-                        GameInfo.DisplayString += FontRed + GameInfo.GameWordCharArray[counter] + EndFont + " ";
+                        //Sets all unguessed letters to red for display
+                        if (letter == '_')
+                        {
+                            GameInfo.DisplayString += FontRed + GameInfo.GameWordCharArray[counter] + EndFont + " ";
+                        }
+                        else GameInfo.DisplayString += letter + " ";
+                        counter++;
                     }
-                    else GameInfo.DisplayString += letter + " ";
-                    counter++;
-                }
                     break;
                 case true:
+                    //Sets entire word to green
                     GameInfo.DisplayString += FontGreen;
                     foreach (char letter in GameInfo.GameWordCharArray)
                     {
@@ -202,7 +152,6 @@ namespace DSED03_Hangman
                     }
                     GameInfo.DisplayString += EndFont;
                     break;
-
             }
         
 

@@ -24,6 +24,7 @@ namespace DSED03_Hangman
         public ImageView ImgEndGame;
         private Button btnPlayAgain;
         private Button btnQuit;
+        private Button btnDefinition;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             
@@ -35,8 +36,10 @@ namespace DSED03_Hangman
             ImgEndGame.SetImageResource(GameInfo.ImageLookup[GameInfo.Attempt]);
             btnPlayAgain = FindViewById<Button>(Resource.Id.btnEndGamePlayAgain);
             btnQuit = FindViewById<Button>(Resource.Id.btnEndGameQuit);
+            btnDefinition = FindViewById<Button>(Resource.Id.btnDefinition);
             btnPlayAgain.Click += BtnPlayAgainClick;
             btnQuit.Click += BtnQuitClick;
+            btnDefinition.Click += BtnDefinitionClick;
             myDbManager = new DatabaseManager();
             // Did the activity enter on a won or lost game
             switch (GameInfo.WordGuessed)
@@ -49,6 +52,12 @@ namespace DSED03_Hangman
                     break;
             }
             FindViewById<TextView>(Resource.Id.txtEndGameWord).SetText(Html.FromHtml(GameInfo.DisplayString), TextView.BufferType.Normal);
+        }
+
+        private void BtnDefinitionClick(object sender, EventArgs e)
+        {
+            //todo Set up Definition button with API call.
+            Toast.MakeText(this, "Button not yet implimented", ToastLength.Long).Show();
         }
 
         private void BtnQuitClick(object sender, EventArgs e)

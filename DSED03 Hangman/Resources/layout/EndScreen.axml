@@ -35,12 +35,18 @@
         android:layout_width="match_parent"
         android:layout_height="52.5dp"
         android:id="@+id/linearLayout2"
-        android:weightSum="10">
+        android:weightSum="15">
         <Button
             android:text="Play Again"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/btnEndGamePlayAgain"
+            android:layout_weight="5" />
+        <Button
+            android:text="Definition"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnDefinition"
             android:layout_weight="5" />
         <Button
             android:text="Quit"
@@ -49,4 +55,10 @@
             android:id="@+id/btnEndGameQuit"
             android:layout_weight="5" />
     </LinearLayout>
+    <ScrollView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="108.5dp"
+        android:id="@+id/scrollView1" />
 </LinearLayout>

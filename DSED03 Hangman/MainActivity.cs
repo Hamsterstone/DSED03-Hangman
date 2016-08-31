@@ -139,14 +139,14 @@ namespace DSED03_Hangman
             }
             else
             {
-                //Clears Wordlist on difficulty change so it will be rebuilt.
-                if (GameInfo.Easy != cbxEasy.Checked || GameInfo.Medium != cbxMedium.Checked ||
-                    GameInfo.Hard != cbxHard.Checked)
+                //    //Clears Wordlist on difficulty change so it will be rebuilt.
+                //    if (GameInfo.Easy != cbxEasy.Checked || GameInfo.Medium != cbxMedium.Checked ||
+                //        GameInfo.Hard != cbxHard.Checked)
                 {
                     GameInfo.Easy = cbxEasy.Checked;
                     GameInfo.Medium = cbxMedium.Checked;
                     GameInfo.Hard = cbxHard.Checked;
-                    GameInfo.WordList.Clear();
+                    //        GameInfo.WordList.Clear();
                 }
                 StartActivity(typeof (Gameplay));
             }

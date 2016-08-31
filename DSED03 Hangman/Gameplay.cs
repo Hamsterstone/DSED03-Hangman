@@ -177,17 +177,10 @@ namespace DSED03_Hangman
 
                             string dictionaryLine = streamReader.ReadLine();
                             counter++;
-                            //Test wordscore of current word vs diffuculties chosen
-                            if (GetWordScore(dictionaryLine) <= GameInfo.EasyWordScoreCap && GameInfo.Easy)
-                            {
+                            
+                            
                                 GameInfo.WordList.Add(dictionaryLine);
-                            }else if (GetWordScore(dictionaryLine) > GameInfo.EasyWordScoreCap && GetWordScore(dictionaryLine) <= GameInfo.MediumWordScoreCap && GameInfo.Medium)
-                            {
-                                GameInfo.WordList.Add(dictionaryLine);
-                            }else if (GetWordScore(dictionaryLine) > GameInfo.MediumWordScoreCap && GameInfo.Hard)
-                            {
-                                GameInfo.WordList.Add(dictionaryLine);
-                            }
+                            
                             Log.Debug(GameInfo.logTag, "WordDone " + counter);
                         }
                     }
@@ -202,9 +195,25 @@ namespace DSED03_Hangman
         private void PickRandomWord()
         {
             Log.Debug(GameInfo.logTag, "PickRandomWord");
-            GameInfo.GameWord = GameInfo.WordList[RandomNumberGenerator(GameInfo.WordList.Count)];
+            string potentialWord = GameInfo.WordList[RandomNumberGenerator(GameInfo.WordList.Count)];
+            //Test wordscore of current word vs diffuculties chosen
+            if (GameInfo.Easy && GetWordScore(potentialWord) <= GameInfo.EasyWordScoreCap)
+            {
+                GameInfo.GameWord=potentialWord;
+            }
+            else if (GameInfo.Medium && GetWordScore(potentialWord) > GameInfo.EasyWordScoreCap && GetWordScore(potentialWord) <= GameInfo.MediumWordScoreCap)
+            {
+                GameInfo.GameWord = potentialWord;
+            }
+            else if (GameInfo.Hard && GetWordScore(potentialWord) > GameInfo.MediumWordScoreCap)
+            {
+                GameInfo.GameWord = potentialWord;
+            }
+            else
+            {
+                PickRandomWord();
+            }
 
-           
         }
         private int RandomNumberGenerator(int maxNumber)
         {
